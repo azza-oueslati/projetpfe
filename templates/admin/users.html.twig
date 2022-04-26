@@ -1,0 +1,65 @@
+{% extends "homeadmin.html.twig" %}
+{% block title %}
+	listes des utilisateurs
+{% endblock %}
+{% block body %}
+	<h1>listes des utilisateurs
+	</h1>
+	<table class="table">
+		<thead>
+			<th>id</th>
+			<th>email</th>
+
+
+			<th>username</th>
+			<th>adresse</th>
+			<th>roles</th>
+			<th>action</th>
+
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr>
+					<td>
+						{{ user.id }}</td>
+					<td>
+						{{ user.email }}</td>
+
+
+					<td>
+						{{ user.username }}</td>
+					<td>
+						{{ user.adresse }}</td>
+					<td>
+						{% for role in user.roles %}
+							{% if role == "ROLE_USER" %}
+								Utilisateurs
+							{% elseif role == "ROLE_RECRUTEUR" %}
+								Recruteur
+							{% elseif role == "ROLE_ADMIN" %}
+								Administrateur
+							{% endif %}
+						{% endfor %}
+
+
+					</td>
+					<td>
+
+						<a href=" {{path ('admin_modifier_utilisateur' , {'id': user.id})}}" class="btn btn-warning">Modifier</a>
+						<a href=" {{path ('admin_delete_utilisateur' , {'id': user.id})}}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de supprimer cet utilisateur?');">Supprimer</a>
+
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">
+						il n'y pas d'utilisateurs inscrit
+					</td>
+				</tr>
+
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+{% endblock %}

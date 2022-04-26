@@ -1,0 +1,50 @@
+{% extends "offre.html.twig" %}
+{% block title %}
+	listes des offres
+{% endblock %}
+{% block body %}
+	<h1>listes des offres
+	</h1>
+	<table class="table">
+		<thead>
+			<th>Titre offre</th>
+
+			<th>Region offre</th>
+
+			<th>Description de l'offre</th>
+			<th>Exigences</th>
+			<th>Date d'expiration</th>
+			<th>Action</th>
+		</thead>
+		<tbody>
+			{% for offre in offre %}
+				<tr>
+					<td>
+						{{ offre.titre_offre }}</td>
+
+
+					<td>
+						{{ offre.region_offre }}</td>
+
+					<td>
+						{{ offre.description }}</td>
+					<td>
+						{{ offre.exigences }}</td>
+					<td>
+						{{ offre.date_expiration|date('Y-m-d') }}</td>
+
+
+					<td>
+
+						<a href=" {{path ('modifier_offre' , {'id': offre.id})}}" class="btn btn-warning">Modifier</a>
+						<a href=" {{path ('delete_offre' , {'id': offre.id})}}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de supprimer cet offre?');">Supprimer</a>
+
+					</td>
+
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+{% endblock %}

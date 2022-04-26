@@ -1,0 +1,33 @@
+{% extends 'homeadmin.html.twig' %}
+
+{% block title %}
+	Accueil
+{% endblock %}
+
+{% block body %}
+	{% if offre %}
+		<table id="offre" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Titre de l'Offre</th>
+					<th>Region</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for offre in offre %}
+					<tr>
+						<td>{{offre.titre_offre}}</td>
+						<td>{{offre.region_offre}}</td>
+						<td>
+							<a href="{{ path('admin_detail') }}" class="btn btn-dark">Voir plus</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>vide
+		</p>
+	{% endif %}
+
+{% endblock %}

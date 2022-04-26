@@ -1,0 +1,35 @@
+{% extends "offre.html.twig" %}
+{% block title %}Profil de
+	{{app.user.username}}
+{% endblock %}
+{% block body %}
+	<div class="grix xs4 container">
+		{% for message in app.flashes('message') %}
+			<div class="col-xs4">
+				<div class="p-3 my-2 rounded-2 success">{{message}}</div>
+			</div>
+		{% endfor %}
+		<div class="col-xs4">
+			<h1>Profil de
+				{{app.user.username}}</h1>
+		</div>
+		<div class="col-xs1">Nom :</div>
+		<div class="col-xs3">{{app.user.username}}</div>
+		<div class="col-xs1">Email :</div>
+		<div class="col-xs3">{{app.user.email}}</div>
+		<div class="col-xs1">Adresse :</div>
+		<div class="col-xs3">{{app.user.adresse}}</div>
+		<div>
+			<a href="{{path('recruteur_profil_modifier')}}" class="term-service">
+				<button class="btn btn-lg btn-primary" type="submit">
+					Modifier le profil
+				</button>
+			</div>
+			<div>
+				<a href="{{path('recruteur_pass_modifier')}}" class="term-service">
+					<button class="btn btn-lg btn-primary" type="submit">
+						Modifier le mot de passe
+					</button>
+				</div>
+
+			{% endblock %}

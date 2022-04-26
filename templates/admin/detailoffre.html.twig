@@ -1,0 +1,12 @@
+{% extends 'homeadmin.html.twig' %}
+
+{% block title %}
+	Détail de l'offre !
+{% endblock %}
+
+{% block body %}
+	{% for offre in offre %}
+		<h1>{{offre.titre_offre}}</h1>
+		<div>{{offre.region_offre|raw}}</div>
+	{% endfor %}
+{% endblock %}

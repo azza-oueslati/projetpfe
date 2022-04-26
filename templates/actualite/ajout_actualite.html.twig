@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les actualite
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="section">
+			<div class="row">
+				<div class="col s12 m12">
+					<h1>
+						Ajouter actualite
+					</h1>
+					{{form_start(form)}}
+					{{form_row(form.titre_actualite,{'label':'titre_actualite :','attr':{'placeholder':'titre_actualite ...'}})}}
+
+					{{form_row(form.description,{'label':'description :','attr':{'placeholder':'description...'}})}}
+
+
+					<button type="submit" class="btn btn-success">Ajouter
+					</button>
+					{{form_end(form)}}
+				</div>
+			</div>
+		</div>
+
+	{% endblock %}
