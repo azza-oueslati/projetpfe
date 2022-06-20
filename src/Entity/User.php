@@ -64,21 +64,31 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="user")
+     * @ORM\Column(type="string", length=255)
      */
-    private $utilisateurs;
+    private $prenom;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Utilisateur", inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="candidat_id", referencedColumnName="id", nullable=true)
+     */
+    private $candidat;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Recruteur", inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="recruteur_id", referencedColumnName="id", nullable=true)
+     */
+    private $recruteur;
 
-    public function __construct()
-    {
-        $this->candidat = new ArrayCollection();
-        $this->recruteur = new ArrayCollection();
-        $this->utilisateurs = new ArrayCollection();
-    }
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
 
@@ -154,32 +164,38 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getUtilisateurs(): Collection
+    public function getPrenom(): ?string
     {
-        return $this->utilisateurs;
+        return $this->prenom;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
+    public function setPrenom(string $prenom): self
     {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setUser($this);
-        }
+        $this->prenom = $prenom;
 
         return $this;
     }
 
-    public function removeUtilisateur(Utilisateur $utilisateur): self
+    public function getCandidat(): ?Utilisateur
     {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getUser() === $this) {
-                $utilisateur->setUser(null);
-            }
-        }
+        return $this->candidat;
+    }
+
+    public function setCandidat(?Utilisateur $candidat): self
+    {
+        $this->candidat = $candidat;
+
+        return $this;
+    }
+
+    public function getRecruteur(): ?Recruteur
+    {
+        return $this->recruteur;
+    }
+
+    public function setRecruteur(?Recruteur $recruteur): self
+    {
+        $this->recruteur = $recruteur;
 
         return $this;
     }

@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ActualiteController extends AbstractController
 {
     /**
-     * @Route("/actualite" , name="actualite", methods={"GET"})
+     * @Route("/actualite" , name="all_actualite", methods={"GET"})
      */
     public function listactualite(ActualiteRepository $actualite)
     {
@@ -37,6 +37,23 @@ class ActualiteController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+    /**
+     * @Route("actualite/lire/{id}", name="actualite", methods={"GET"})
+     */
+    public function getactualite(Actualite $actualite)
+    {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        $jsonContent = $serializer->serialize($actualite, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        $response = new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
     /**
      * @Route("/ajout_actualite", name="app_actualite",methods={"GET","POST"})
@@ -46,15 +63,17 @@ class ActualiteController extends AbstractController
         $actualite = new Actualite();
         $form = $this->createForm(ActualiteType::class, $actualite);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $images = $form->get('image')->getData();
-            foreach ($images as $image) {
-                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
-                $image->move(
-                    $this->getParameter('images_directory'),
-                    $fichier
-                );
-            }
+            $image = $form->get('image')->getData();
+
+
+            $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+            $image->move(
+                $this->getParameter('images_directory'),
+                $fichier
+            );
+            $actualite->setImage('uploads/' . $fichier);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($actualite);

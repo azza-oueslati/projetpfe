@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,26 +38,59 @@ class FormationController extends AbstractController
             return $response;
         }
     }
+    /**
+     * @Route("formation/lire/{id}", name="app-formation", methods={"GET"})
+     */
+    public function getutilisateur(Formation $formation)
+    {
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        $jsonContent = $serializer->serialize($formation, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        $response = new Response($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
     /**
-     * @Route("/ajout_formation", name="app_formation")
+     * @Route("/formation/ajout", name="ajout-formation", methods={"POST"})
      */
-    public function add(EntityManagerInterface $manager, Request $request)
+    public function addoffre(Request $request)
     {
-        $form = $this->createForm(FormationType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $formation = $form->getData();
-            $manager->persist($formation);
-            $manager->flush();
-            $this->addFlash(
-                'notice',
-                'super ! une nouvelle formation à été ajoutée !'
-            );
-            return $this->redirectToRoute('formation');
-        }
-        return $this->render('formation/ajout_formation.html.twig', [
-            'form' => $form->createView(),
-        ]);
+
+        $formation = new Formation();
+        $donnees = json_decode($request->getContent());
+        $formation->setTitreFormation($donnees->titre_formation);
+        $formation->setDescription($donnees->description);
+        $formation->setCentreFormation($donnees->centre_formation);
+        $formation->setInfo($donnees->info);
+        $formation->setWeb($donnees->web);
+        $formation->setEmail($donnees->email);
+        $formation->setHeure($donnees->heure);
+        $formation->setCout($donnees->cout);
+        $formation->setExamen($donnees->examen);
+        $formation->setFormateur($donnees->formateur);
+        $formation->setImage($donnees->image);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($formation);
+        $entityManager->flush();
+
+        return new JsonResponse('ok');
+    }
+
+    /**
+     * @Route("/formation/supprimer/{id}", name="supprime-formation", methods={"DELETE"})
+     */
+    public function removeuser(Formation $formation)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($formation);
+        $entityManager->flush();
+        return new JsonResponse('ok');
     }
 }

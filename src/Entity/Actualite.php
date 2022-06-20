@@ -25,7 +25,7 @@ class Actualite
     private $titre_actualite;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
     private $description;
 

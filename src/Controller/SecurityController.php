@@ -39,30 +39,6 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
-
-    /**
-     * @Route("/inscription" , name="security_registration", methods={"POST"})
-     */
-    public function registration(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
-    {
-
-        $user = new User();
-
-        $donnees = json_decode($request->getContent());
-
-        $user->setUsername($donnees->username);
-        $user->setEmail($donnees->email);
-        $user->setAdresse($donnees->adresse);
-        $user = $this->getDoctrine()->getRepository(RegistrationType::class)->findOneBy(["id" => 1]);
-        $user->setUsers($user);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new Response('ok', 200);
-    }
-
     /**
      * @Route("/login" , name="security_login")
      */

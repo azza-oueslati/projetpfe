@@ -62,9 +62,6 @@ security:
          #- { path: ^/recruteur, roles: ROLE_RECRUTEUR }
         #- { path: ^/api/user, roles: IS_ATHENTICATED_FULLY,methods: [PUT,PATCH,DELETE] }
 
-    role_hierarchy:
-        ROLE_RECRUTEUR: ROLE_USER
-        ROLE_ADMIN: ROLE_RECRUTEUR
     
         
 
